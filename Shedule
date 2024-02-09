@@ -1,0 +1,30 @@
+import shutil
+import os
+import schedule
+import time
+
+
+def backup_files():
+    source_folder = '/путь/к/вашей/исходной/папке'  # Путь к исходной папке
+    backup_folder = '/путь/к/вашей/резервной/папке'  # Путь к папке для резервных копий
+
+    if not os.path.exists(backup_folder):
+        os.makedirs(backup_folder)
+
+    # Создание имени файла резервной копии с использованием текущей даты и времени
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
+    backup_filename = f"backup_{timestamp}.zip"
+
+    # Создание архива резервной копии
+    shutil.make_archive(os.path.join(backup_folder, backup_filename), 'zip', source_folder)
+
+    print(f"Резервная копия создана: {backup_filename}")
+
+
+# Установка расписания для создания резервной копии каждый день в 18:00
+schedule.every().day.at("18:00").do(backup_files)
+
+
+while True:
+    schedule.run_pending()
+    time.sleep(1)
